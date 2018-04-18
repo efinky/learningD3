@@ -2,6 +2,8 @@
 var rowCount = 10;
 var colCount = 10;
 var player1 = true;
+var color1 = "000";
+var color2 = "FFF"
 
 function gridData() {
 	var data = new Array();
@@ -52,7 +54,7 @@ var row = grid.selectAll(".row")
 	.enter().append("g")
 	.attr("class", "row");
 	
-var column = row.selectAll(".square")
+/* var column = row.selectAll(".square")
 	.data(function(d) { return d; })
 	.enter().append("rect")
 	.attr("class","square")
@@ -66,9 +68,31 @@ var column = row.selectAll(".square")
        d.click ++;
        if ((d.click)%2 == 0 ) { d3.select(this).style("fill","#fff"); }
 	   if ((d.click)%2 == 1 ) { d3.select(this).style("fill","#2C93E8"); }
-    });
+    }); */
 	
-	
+function update() {
+	var rect = row.selectAll(".square")
+		.data(function(d) { return d; })
+		rect.enter().append("rect")
+			.attr("class", "square")
+			.attr("x", function(d) { return d.x; })
+			.attr("y", function(d) { return d.y; })
+			.attr("width", function(d) { return d.width; })
+			.attr("height", function(d) { return d.height; })
+			.style("fill", function(d) {return d.color; })
+			.style("stroke", "#222")
+			.style("opacity", 1e-6);
+		rect.transition()
+			.attr("x", function(d) { return d.x; })
+			.attr("y", function(d) { return d.y; })
+			.attr("width", function(d) { return d.width; })
+			.attr("height", function(d) { return d.height; })
+			.style("fill", function(d) {return d.color; })
+			.style("opacity", 1);
+		rect.exit().transition()
+			.style("opacity", 1e-6)
+			.remove();
+}
 
 function updateSquare(square) {
 	console.log("test");
@@ -82,17 +106,30 @@ function updateSquare(square) {
 	console.log("test2");
 }
 function firstTurn() {
+	gridData[2][2].color = "fe1";
 	gridData[2][2].stat = 1;
-	updateSquare(gridData[2][2]);
+	gridData[rowCount-3][colCount-3].color = "fe1";
 	gridData[rowCount-3][colCount-3].stat = 1;
-	updateSquare(gridData[rowCount-3][colCount-3]);
+	update();
 }
-//firstTurn();
-//setInterval(nextTurn, 1000);
+firstTurn();
+setInterval(nextTurn, 1000);
 
 function nextTurn() {
-	if (player1) {
-		
+	x = Math.floor(Math.random() * rowCount);
+	y = Math.floor(Math.random() * rowCount);
+	if (true) {//(player1) {
+		if (gridData[x][y].stat == 0)
+		{
+			gridData[x][y].color = color1;
+			gridData[x][y].stat = 1;
+		}
+		else 
+		{
+			gridData[x][y].color = color1;
+			gridData[x][y].stat = 0;
+		}
+		update();
 	}
 	
 	plaery1=!player1;
